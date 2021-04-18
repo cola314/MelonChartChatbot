@@ -81,14 +81,9 @@ function saveUsers() {
 function loadUsers() {
     try {
         if(fs.existsSync(BACKUP_FILE)) {
-            fs.readFileSync(BACKUP_FILE, (err, data) => {
-                if(!err) {
-                    users = JSON.parse(data);
-                    console.log('read ' + BACKUP_FILE);
-                } else {
-                    console.error(err);
-                }
-            });
+            console.log('load user');
+            users = JSON.parse(fs.readFileSync(BACKUP_FILE));
+	    console.log(users);
         }
     } catch(err) {
         console.error(err);
