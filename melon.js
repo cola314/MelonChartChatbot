@@ -40,13 +40,13 @@ const get24HitChart = async () => {
     return new Promise((resolve, reject) => {
         get24HitHtml()
             .then(html => {
-                let result = "멜론 24Hit 차트";
+                let result = "멜론 24Hit 차트\n"
                 const $ = cheerio.load(html.data);
-                headLine = $('span.yyyymmdd').text().trim() + " " + $('span.hhmm').text().trim();
+                headLine = $('span.yyyymmdd').text().trim() + " - " + $('span.hhmm').text().trim();
                 musicNameList = $("div.ellipsis.rank01").find("span");
                 singerList = $("div.ellipsis.rank02").find("span");
 
-                result += " - " + headLine + "\n";
+                result += headLine + "\n";
                 for(var i=0; i<10; i++) {
                     result += String(i + 1) + ". " + $(musicNameList[i]).text().trim() + " - " + $(singerList[i]).text() + "\n";
                 }
