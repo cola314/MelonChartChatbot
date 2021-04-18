@@ -5,7 +5,10 @@ const ioClient = io.connect(address);
 const schedule = require('node-schedule');
 const melon = require('./melon');
 
+const BACKUP_FILE = 'user.backup';
 console.log('start')
+
+let users = [];
 loadUsers();
 
 const registerData = {
@@ -55,8 +58,6 @@ const sendMessage = (room, msg) => {
     ioClient.emit("send message", res);
 };
 
-let users = [];
-
 const addUser = (user) => {
     if(!isExistUser(user)) {
         users.push(user);
@@ -72,16 +73,23 @@ const deleteUser = (user) => {
 }
 
 function saveUsers() {
-    fs.writeFile('user.backup', JSON.stringify(users));
+    fs.writeFileSync(BACKUP_FILE, JSON.stringify(users), (err) => {
+        console.error(err);
+    });
 }
 
 function loadUsers() {
     try {
-        fs.readFile('user.backup', (err, data) => {
-            if(!err) {
-                users = JSON.parse(data);
-            }
-        });
+        if(fs.existsSync(BACKUP_FILE)) {
+            fs.readFileSync(BACKUP_FILE, (err, data) => {
+                if(!err) {
+                    users = JSON.parse(data);
+                    console.log('read ' + BACKUP_FILE);
+                } else {
+                    console.error(err);
+                }
+            });
+        }
     } catch(err) {
         console.error(err);
     }
