@@ -1,10 +1,12 @@
 const address = "http://***REMOVED***:9200";
 const io = require("socket.io-client");
+const fs = require('fs');
 const ioClient = io.connect(address);
 const schedule = require('node-schedule');
 const melon = require('./melon');
 
 console.log('start')
+loadUsers();
 
 const registerData = {
     "password" : "4321"
@@ -12,23 +14,25 @@ const registerData = {
 
 ioClient.on('connect', () => {
     ioClient.emit("register", registerData);
-};
+});
 
 ioClient.on("receive message", async (data) => {
     console.log(data);
     switch(data.msg) {
         case ".멜론":
-            let chart = await melon.getChart();
+            const chart = await melon.get24HitChart();
             console.log(chart);
             sendMessage(data.room, chart);
             break;
         case ".멜론구독":
             addUser(data.room);
             sendMessage(data.room, "멜론 서비스에 구독 되었습니다");
+            saveUsers();
             break;
         case ".멜론취소":
             deleteUser(data.room);
             sendMessage(data.room, "멜론 서비스에 구독취소 되었습니다");
+            saveUsers();
             break;
         case ".멜론정보":
             const info = "명령어 모음\n" + 
@@ -65,6 +69,22 @@ const isExistUser = (user) => {
 
 const deleteUser = (user) => {
     users = users.filter(e => e !== user);
+}
+
+function saveUsers() {
+    fs.writeFile('user.backup', JSON.stringify(users));
+}
+
+function loadUsers() {
+    try {
+        fs.readFile('user.backup', (err, data) => {
+            if(!err) {
+                users = JSON.parse(data);
+            }
+        });
+    } catch(err) {
+        console.error(err);
+    }
 }
 
 schedule.scheduleJob({hour: 12, minute: 0}, async () => {

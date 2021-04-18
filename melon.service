@@ -1,0 +1,12 @@
+[Unit]
+Description=melon-daemon
+After=network.target
+ 
+[Service]
+ExecStart=node app.js
+Restart=on-failure
+User=cola
+WorkingDirectory=/home/cola/music-chart-chatbot
+ 
+[Install]
+WantedBy=multi-user.target
