@@ -91,7 +91,8 @@ function loadUsers() {
 }
 
 schedule.scheduleJob({hour: 12, minute: 0}, async () => {
-    let chart = await melon.getChart();
+    console.log('alarm run');
+    let chart = await melon.get24HitChart();
     console.log(chart);
     users.map(user => sendMessage(user, chart));
 })
