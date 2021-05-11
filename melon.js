@@ -30,7 +30,8 @@ const getChart = async () => {
 
 const get24HitHtml = async () => {
     try {
-        return await axios.get("https://www.melon.com/chart/");
+        //return await axios.get("https://www.melon.com/chart/");
+        return await axios.get("https://www.melon.com/new/");
     } catch (err) {
         console.error(err);
     }

@@ -6,7 +6,7 @@ After=network.target
 ExecStart=node app.js
 Restart=on-failure
 User=cola
-WorkingDirectory=/home/cola/music-chart-chatbot
- 
+WorkingDirectory=/home/pi/.jenkins/workspace/music-chart-chatbot
+
 [Install]
 WantedBy=multi-user.target
