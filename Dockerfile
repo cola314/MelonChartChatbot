@@ -1,5 +1,5 @@
 FROM node:14
-
+VOLUME ["/usr/src/app/data"]
 # 앱 디렉터리 생성
 WORKDIR /usr/src/app
 
