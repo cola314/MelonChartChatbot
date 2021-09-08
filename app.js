@@ -105,7 +105,7 @@ const sendMessage = (room, msg) => {
   console.log("send message to " + res.room);
 };
 
-schedule.scheduleJob({ hour: 20, minute: 56, second: 15 }, async () => {
+schedule.scheduleJob({ hour: 12, minute: 0, second: 15 }, async () => {
   console.log('alarm run');
   userManager.users.map(user => sendMessage(user, melon.convertChartToString(latestNewChartCache)));
 })
