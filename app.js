@@ -45,6 +45,24 @@ ioClient.on("receive message", async (data) => {
     return;
   }
 
+  //.멜론차트 {숫자} - n번째 Top100 차트 검색결과(freetube)
+  var match = /.멜론차트\s+\d+/.exec(data.msg);
+  if (match) {
+    var searchIndex = Number(/\d+/.exec(data.msg)[0]);
+    if (1 <= searchIndex && searchIndex <= 10) {
+      const chart = latestTop100ChartCache.chartList[searchIndex - 1];
+      const searchText = `${chart.name} ${chart.singer}`;
+      const decodedSearchText = searchText.replace(/\s+/gi, '%20');
+      const info = `'${searchText}'의 검색 결과\n\n` +
+        `http://***REMOVED***:9203/index.html?search=${decodedSearchText}\n\n` +
+        `https://***REMOVED***:9112/index.html?search=${decodedSearchText}`;
+      sendMessage(data.room, info);
+    } else {
+      sendMessage(data.room, "1~10까지 검색 가능합니다");
+    }
+    return;
+  }
+
   switch (data.msg) {
     case ".멜론":
       sendMessage(data.room, melon.convertChartToString(latestNewChartCache));
@@ -67,6 +85,7 @@ ioClient.on("receive message", async (data) => {
         ".멜론\n" +
         ".멜론 [1~10]\n" +
         ".멜론차트\n" +
+        ".멜론차트 [1~10]\n" +
         ".멜론구독\n" +
         ".멜론취소\n" +
         ".멜론정보\n\n" +
