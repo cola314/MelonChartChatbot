@@ -5,11 +5,13 @@ const schedule = require('node-schedule');
 const melon = require('./melon');
 const userManager = require('./user-manager');
 
-var latestChartCache;
+var latestTop100ChartCache;
+var latestNewChartCache;
 
 const init = async () => {
   console.log('start')
-  latestChartCache = await melon.get24HitChart();
+  latestTop100ChartCache = await melon.getTop100Chart();
+  latestNewChartCache = await melon.getNewChart();
   userManager.loadUsers();
 }
 init();
@@ -26,7 +28,10 @@ ioClient.on("receive message", async (data) => {
   console.log(data);
   switch (data.msg) {
     case ".멜론":
-      sendMessage(data.room, latestChartCache);
+      sendMessage(data.room, melon.convertChartToString(latestNewChartCache));
+      break;
+    case ".멜론차트":
+      sendMessage(data.room, melon.convertChartToString(latestTop100ChartCache));
       break;
     case ".멜론구독":
       userManager.addUser(data.room);
@@ -41,6 +46,7 @@ ioClient.on("receive message", async (data) => {
     case ".멜론정보":
       const info = "명령어 모음\n" +
         ".멜론\n" +
+        ".멜론차트\n" +
         ".멜론구독\n" +
         ".멜론취소\n" +
         ".멜론정보\n\n" +
@@ -60,13 +66,14 @@ const sendMessage = (room, msg) => {
   console.log("send message to " + res.room);
 };
 
-schedule.scheduleJob({ hour: 12, minute: 0, second: 15 }, async () => {
+schedule.scheduleJob({ hour: 20, minute: 56, second: 15 }, async () => {
   console.log('alarm run');
-  userManager.users.map(user => sendMessage(user, latestChartCache));
+  userManager.users.map(user => sendMessage(user, melon.convertChartToString(latestNewChartCache)));
 })
 
 //when the second is 1 (e.g. 12:00:01, 20:43:01, etc.).
 schedule.scheduleJob('40 0 * * * *', async () => {
   console.log('load data');
-  latestChartCache = await melon.get24HitChart();
+  latestTop100ChartCache = await melon.getTop100Chart();
+  latestNewChartCache = await melon.getNewChart();
 })
