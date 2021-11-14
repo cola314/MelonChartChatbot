@@ -14,7 +14,7 @@ const getTop100Chart = async () => {
     getTop100Html()
       .then(html => {
         const $ = cheerio.load(html.data);
-        musicNameList = $("div.ellipsis.rank01").find("span");
+        musicNameList = $("div.ellipsis.rank01").find("span a");
         singerList = $("div.ellipsis.rank02").find("span");
 
         const chartList = []
@@ -49,7 +49,7 @@ const getNewChart = async () => {
       .then(html => {
         const $ = cheerio.load(html.data);
         headLine = $('span.yyyymmdd').text().trim() + " - " + $('span.hhmm').text().trim();
-        musicNameList = $("div.ellipsis.rank01").find("span");
+        musicNameList = $("div.ellipsis.rank01").find("span a");
         singerList = $("div.ellipsis.rank02").find("span");
 
         const chartList = []
