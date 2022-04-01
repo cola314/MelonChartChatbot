@@ -4,7 +4,7 @@ import { KakaoService, MessageHandler } from './Kakao/KakaoService';
 import { scheduleJob } from 'node-schedule';
 import { Chart } from './Melon/Chart';
 
-const DATA_PATH = process.env.PATH ?? __dirname;
+const DATA_PATH = process.env.DATA_PATH ?? __dirname;
 const API_SERVER = process.env.API_SERVER;
 const API_KEY = process.env.API_KEY;
 const DETAIL_URL = process.env.DETAIL_URL;
