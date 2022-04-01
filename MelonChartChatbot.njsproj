@@ -32,6 +32,12 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.ts" />
+    <Content Include="Dockerfile">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include=".dockerignore">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include=".editorconfig">
       <SubType>Code</SubType>
     </Content>
