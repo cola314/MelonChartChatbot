@@ -1,4 +1,4 @@
-FROM node:14
+﻿FROM node:14
 VOLUME ["/usr/src/app/data"]
 # 앱 디렉터리 생성
 WORKDIR /usr/src/app
@@ -14,5 +14,9 @@ RUN npm install
 
 # 앱 소스 추가
 COPY . .
+
+# 타입스크립트 빌드
+COPY tsconfig.json ./
+RUN npm run build
 
 CMD [ "npm", "start" ]
