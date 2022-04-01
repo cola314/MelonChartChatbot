@@ -1,27 +1,32 @@
 ﻿import * as fs from 'fs';
 import * as path from 'path';
 
-const BACKUP_FILE_DIR = path.join(__dirname, 'data');
-const BACKUP_FILE = path.join(BACKUP_FILE_DIR, 'user.backup');
+let backupDir: string;
+let backupFile: string;
+
+export function setPath(dataPath: string) {
+    backupDir = path.join(dataPath);
+    backupFile = path.join(backupDir, 'user.backup');
+}
 
 export let users = new Set<string>();
 
-export function saveUsers() {
+export function save() {
     try {
-        if (!fs.existsSync(BACKUP_FILE_DIR)) {
-            fs.mkdirSync(BACKUP_FILE_DIR);
+        if (!fs.existsSync(backupDir)) {
+            fs.mkdirSync(backupDir);
         }
         // 하위 호환성을 고려해서 list형식으로 저장
-        fs.writeFileSync(BACKUP_FILE, JSON.stringify([...users.values()]));
+        fs.writeFileSync(backupFile, JSON.stringify([...users.values()]));
     } catch (err) {
         console.error(err);
     }
 }
 
-export function loadUsers() {
-    if (fs.existsSync(BACKUP_FILE)) {
+export function load() {
+    if (fs.existsSync(backupDir)) {
         console.log('load user');
-        users = new Set(JSON.stringify(fs.readFileSync(BACKUP_FILE)));
+        users = new Set(JSON.stringify(fs.readFileSync(backupFile)));
         console.log(module.exports.users);
     }
 }

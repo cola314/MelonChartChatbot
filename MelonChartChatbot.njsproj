@@ -41,13 +41,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Melon\" />
+    <Folder Include="Kakao\" />
     <Folder Include="User\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Kakao\KakaoService.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Melon\CachedChartService.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Melon\Chart.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="Melon\MelonChatService.ts">
+    <TypeScriptCompile Include="Melon\MelonChartService.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Melon\Music.ts" />
