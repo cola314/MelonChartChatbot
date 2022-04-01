@@ -15,4 +15,8 @@ RUN npm install
 # 앱 소스 추가
 COPY . .
 
+# 타입스크립트 빌드
+COPY tsconfig.json ./
+RUN npm run build
+
 CMD [ "npm", "start" ]
