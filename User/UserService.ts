@@ -26,7 +26,7 @@ export function save() {
 export function load() {
     if (fs.existsSync(backupFile)) {
         console.log('load user');
-        users = new Set(JSON.stringify(fs.readFileSync(backupFile)));
+        users = new Set(JSON.parse(fs.readFileSync(backupFile).toString()));
         console.log(module.exports.users);
     }
 }
