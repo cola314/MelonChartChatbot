@@ -48,9 +48,13 @@
   <ItemGroup>
     <Folder Include="Melon\" />
     <Folder Include="Kakao\" />
+    <Folder Include="Config\" />
     <Folder Include="User\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Config\AppConfig.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Kakao\KakaoService.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

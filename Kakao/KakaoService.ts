@@ -1,4 +1,6 @@
-﻿import * as io from 'socket.io-client';
+﻿import axios from 'axios';
+import * as express from 'express';
+import * as config from '../Config/AppConfig';
 
 export interface Message {
     room: string;
@@ -12,38 +14,44 @@ export interface MessageHandler {
 interface RawMessage {
     room: string;
     sender: string;
-    msg: string;
+    message: string;
     isGroupChat: boolean;   
+    secret: string;
 }
 
 export class KakaoService {
-    _socket: SocketIOClient.Socket
 
-    constructor(address: string, apiKey: string, handler: MessageHandler) {
-        const socket = io.connect(address);
-        this._socket = socket;
+    constructor(handler: MessageHandler) {
+        const app = express();
+        app.use(express.json());
 
-        socket.on('connect', () => {
-            console.log('server connected')
-            socket.emit("register", {
-                "password": apiKey
-            });
+        app.post('/api/message/send', (req: express.Request<{}, {}, RawMessage>, res) => {
+            if (!req.body.room || !req.body.message)
+                return res.sendStatus(400);
+            if (req.body.secret != config.API_SECRET)
+                return res.status(400).send('Invalid Secret');
+            
+            handler({
+                room: req.body.room,
+                message: req.body.message,
+            })
+            res.sendStatus(200);
         });
 
-        socket.on("receive message", async (data: RawMessage) => {
-            console.log(data);
-            handler({
-                room: data.room,
-                message: data.msg
-            });
+        app.listen(config.HTTP_PORT, () => {
+            console.log(`app listening on port ${config.HTTP_PORT}`);
         });
     }
 
     send(room: string, message: string) {
-        this._socket.emit("send message", {
-            "room": room,
-            "msg": message
-        });
-        console.log("send message to " + room);
+        axios
+            .post(config.API_SERVER, {
+                apiKey: config.API_KEY,
+                room: room,
+                message: message,
+            })
+            .catch(ex => {
+                console.error(ex);
+            });
     }
 };

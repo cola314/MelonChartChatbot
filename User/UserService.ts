@@ -1,13 +1,9 @@
 ﻿import * as fs from 'fs';
 import * as path from 'path';
+import * as config from '../Config/AppConfig';
 
-let backupDir: string;
-let backupFile: string;
-
-export function setPath(dataPath: string) {
-    backupDir = path.join(dataPath);
-    backupFile = path.join(backupDir, 'user.backup');
-}
+let backupDir = path.join(config.DATA_PATH);
+let backupFile = path.join(backupDir, 'user.backup');
 
 export let users = new Set<string>();
 

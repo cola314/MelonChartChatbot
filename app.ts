@@ -2,17 +2,11 @@
 import * as userService from './User/UserService';
 import { KakaoService, MessageHandler } from './Kakao/KakaoService';
 import { scheduleJob } from 'node-schedule';
-import { Chart } from './Melon/Chart';
-
-const DATA_PATH = process.env.DATA_PATH ?? __dirname;
-const API_SERVER = process.env.API_SERVER;
-const API_KEY = process.env.API_KEY;
-const DETAIL_URL = process.env.DETAIL_URL;
+import * as config from './Config/AppConfig';
 
 (async () => {
     console.log('app start')
     await cachedChartService.refreshAllChart();
-    userService.setPath(DATA_PATH);
     userService.load();
 })();
 
@@ -26,7 +20,7 @@ const messageHandler: MessageHandler = async (data) => {
             const searchText = `${chart.name} ${chart.singer}`;
             const decodedSearchText = searchText.replace(/\s+/gi, '%20');
             const info = `'${searchText}'의 검색 결과\n\n` +
-                `${DETAIL_URL}/index.html?search=${decodedSearchText}`;
+                `${config.DETAIL_URL}/index.html?search=${decodedSearchText}`;
             kakaoService.send(data.room, info);
         } else {
             kakaoService.send(data.room, "1~10까지 검색 가능합니다");
@@ -43,7 +37,7 @@ const messageHandler: MessageHandler = async (data) => {
             const searchText = `${chart.name} ${chart.singer}`;
             const decodedSearchText = searchText.replace(/\s+/gi, '%20');
             const info = `'${searchText}'의 검색 결과\n\n` +
-                `${DETAIL_URL}/index.html?search=${decodedSearchText}`;
+                `${config.DETAIL_URL}/index.html?search=${decodedSearchText}`;
             kakaoService.send(data.room, info);
         } else {
             kakaoService.send(data.room, "1~10까지 검색 가능합니다");
@@ -83,7 +77,7 @@ const messageHandler: MessageHandler = async (data) => {
             break;
     }
 }
-const kakaoService = new KakaoService(API_SERVER, API_KEY, messageHandler);
+const kakaoService = new KakaoService(messageHandler);
 
 scheduleJob({ hour: 12, minute: 0, second: 15 }, () => {
     console.log('alarm run');
